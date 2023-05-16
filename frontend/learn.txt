@@ -1,0 +1,156 @@
+SSG and SSR: Pre-render pages at build time (SSG) or request time (SSR) in a single project.
+
+getStaticProps  
+=> a special function that allows you to fetch data at build time and pass it as props to a page component.
+=> It is used in static site generation (SSG) to pre-render pages with the fetched data.
+
+
+=> Example:
+=> The news data is returned as props, which can be accessed in the News component.
+=> During the build process, Next.js will call the getStaticProps function and wait for the asynchronous operation to complete.
+=> The fetched data is stored in the news variable.
+=> The props object is returned with the news data, which will be passed to the News component as props
+=> The revalidate property is set to 1, which means that the page will be re-generated every 1 second (during development) or when a new request is made (in production). This is useful for dynamic data updates
+=> By using getStaticProps, you ensure that the news data is fetched at build time and passed as props to the News component. 
+=> This allows Next.js to generate a static version of the page with the fetched data, providing better performance and SEO benefits
+
+export default function News({ news }) {
+ return (
+  <div>
+   <Layout>
+    <h1>News</h1>
+    {news.length === 0 && <h3>No News</h3>}
+    {news.map((item) => (
+     <NewsItem key={item.id} news={item} />
+    ))}
+    <Link href="/">
+     <a className={styles.back}>Go Back</a>
+    </Link>
+   </Layout>
+  </div>
+ );
+}
+
+export async function getStaticProps() {
+ const res = await fetch(`${API_URL}/api/news`);
+ const news = await res.json();
+
+ return {
+  props: { news },
+  revalidate: 1,
+ };
+}
+
+
+
+getServerSideProps:-
+=> a special function that allows you to fetch data on each request made to a page. 
+=> It is used for server-side rendering (SSR) to fetch data dynamically at runtime.
+
+Here's an explanation of how the getServerSideProps method works:
+
+=> When a request is made to a page that includes the getServerSideProps method, Next.js calls this function on the server.
+=> Inside the getServerSideProps function, you can fetch data from an API, a database, or any other data source using asynchronous operations like fetch.
+=> The fetched data is typically stored in variables in data variable.
+=> You return an object in props key. This data will be passed as props to the page component.
+=> The page component, along with the fetched data as props, is then rendered on the server and sent as a response to the client.
+=> The getServerSideProps method is useful when you have dynamic data that needs to be fetched and rendered on each request, such as personalized user data, real-time data, or data that frequently changes. It enables server-side rendering for the specific page, allowing you to fetch and render data dynamically on the server.
+
+export default function MyPage({ data }) {
+  // Use the fetched data in your page component
+  return (
+    <div>
+      <h1>{data.title}</h1>
+      <p>{data.description}</p>
+    </div>
+  );
+}
+
+export async function getServerSideProps() {
+  // Fetch data from an API or database
+  const res = await fetch('https://api.example.com/data');
+  const data = await res.json();
+
+  // Return the data as props
+  return {
+    props: {
+      data,
+    },
+  };
+}
+
+
+getStaticPaths Function:
+
+=> It is an async function that is used for dynamic route generation in Next.js.
+=> It fetches the news data from the API endpoint (${API_URL}/api/news) and retrieves an array of news items.
+=> The function maps each news item to an object containing the params object with the slug parameter.
+=> The paths variable holds an array of objects specifying the dynamic paths for each news item.
+=> The fallback property is set to true, indicating that any paths not returned by getStaticPaths will be handled by the fallback behavior.
+
+=> Difference between getServerSideProps and useEffect
+
+=>both used in Next.js for data fetching and handling side effects
+
+1. Timing: 
+=> getServerSideProps: 
+=> is executed on the server-side during every request. 
+=> It fetches data before rendering the page and provides the fetched data as props to the page component.
+
+=> useEffect 
+=> is executed on the client-side after the component has rendered. 
+=> It runs after the initial render and can be triggered based on dependencies or events.
+
+Execution:
+
+=> getServerSideProps
+=> is executed on the server-side, so it can access server-only data, interact with databases, or perform other server-side operations.
+
+=> useEffect 
+=> is executed on the client-side within the browser, so it can access client-specific APIs and interact with the DOM.
+
+Data Fetching:
+
+getServerSideProps
+=> is typically used for server-side data fetching. 
+=> It allows you to fetch data from external APIs, databases, or perform server-side operations.
+
+useEffect
+=> is commonly used for client-side data fetching. 
+=> It allows you to make HTTP requests or interact with client-specific APIs such as the browser's local storage or geolocation.
+
+Rendering:
+
+=> getServerSideProps 
+=> provides the fetched data as props to the page component, which allows you to pre-render the page on the server with the fetched data.
+
+=> useEffect
+=> does not directly affect the initial rendering of the page. 
+=> It is used for handling side effects after the initial render, such as updating the component state, subscribing to event listeners, or making additional requests based on user interactions.
+
+
+
+============================================================
+in index.js of root folder
+
+import BlogPagination, { getStaticProps } from "./page/[slug]";
+export { getStaticProps };
+export default BlogPagination;
+
+Importing BlogPagination and getStaticProps:
+
+=> In the index.js file located in the root folder of the pages directory, you import the BlogPagination component and getStaticProps function from the ./page/[slug] file.
+
+=> By exporting getStaticProps in index.js and re-exporting it from ./page/[slug], you make the getStaticProps function available to both files.
+
+=> When you run the Next.js application, the getStaticProps function will be executed to pre-render the BlogPagination pages with the necessary data.
+
+=> In summary, the BlogPagination component is rendered on each page of the blog, with the data for each page being fetched through the getStaticProps function. The getStaticPaths function determines the available paths (page URLs) based on the blog content and the pagination settings.
+
+
+Gray-matter
+=> is a popular JavaScript library used for parsing front matter in markdown files. 
+=> Front matter is metadata or configuration typically placed at the beginning of a markdown file, enclosed between two sets of triple dashes (---). 
+=> It is commonly used to store information such as title, date, author, tags, etc., associated with the markdown content.
+=> Gray-matter allows you to extract the front matter from a markdown file and access it as a JavaScript object. 
+=> It provides a simple API to parse and access the front matter data.
