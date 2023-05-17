@@ -1,10 +1,22 @@
-import Base from "@/layouts/Baseof";
+import Base from "@/layouts/components/Baseof";
 import { getRegularPage, getSinglePage } from "@/lib/contentParser";
+import config from "../config/config.json";
 import React from "react";
+import Contact from "@/layouts/Contact";
+import About from "@/layouts/About";
+import Default from "@/layouts/Default";
+import NotFound from "@/layouts/404";
+import PostSingle from "@/layouts/components/PostSingle";
 const { blog_folder } = config.settings;
 
 const RegularPages = ({ slug, data, posts, authors, postSlug }) => {
- return <Base></Base>;
+ const { title, meta_title, description, image, noindex, canonical, layout } = data.frontmatter;
+
+ return (
+  <Base title={title} description={description ? description : content.slice(0, 120)} meta_title={meta_title} image={image} noindex={noindex} canonical={canonical}>
+   {postSlug.includes(slug) ? <PostSingle slug={slug} post={data} authors={authors} posts={posts} /> : layout === "404" ? <NotFound data={data} /> : layout === "about" ? <About data={data} /> : layout === "contact" ? <Contact data={data} /> : <Default data={data} />}
+  </Base>
+ );
 };
 
 export default RegularPages;
@@ -14,6 +26,7 @@ export const getStaticPaths = async () => {
  const regularSlugs = getSinglePage("content");
  const postSlugs = getSinglePage(`content/${blog_folder}`);
  const allSlugs = [...regularSlugs, ...postSlugs];
+
  const paths = allSlugs.map((item) => ({
   params: {
    regular: item.slug,

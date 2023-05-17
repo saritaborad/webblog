@@ -1,6 +1,7 @@
 import fs from "fs";
 import matter from "gray-matter";
 import path from "path";
+import parseMDX from "./utils/mdxParser";
 
 // get all single pages ex:blog/post.md
 export const getSinglePage = (folder) => {
@@ -30,6 +31,7 @@ export const getRegularPage = async (slug) => {
  let frontmatter, content;
  const publishedPages = getSinglePage("content/posts");
  const regularPage = getSinglePage("content");
+
  if (publishedPages.map((slug) => slug.slug).includes(slug)) {
   const pageData = publishedPages.filter((data) => data.slug === slug);
   content = pageData[0].content;
@@ -39,7 +41,7 @@ export const getRegularPage = async (slug) => {
   content = regulerData[0].content;
   frontmatter = regulerData[0].frontmatter;
  } else {
-  const notFoundPage = fs.readFileSync(path.join("content/404.md"), "utf-8");
+  const notFoundPage = fs.readFileSync(path.join("content", "404.md"), "utf-8");
   const notFoundDataParsed = matter(notFoundPage);
   content = notFoundDataParsed.content;
   frontmatter = notFoundDataParsed.data;

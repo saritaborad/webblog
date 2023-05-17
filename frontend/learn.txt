@@ -154,3 +154,52 @@ Gray-matter
 => It is commonly used to store information such as title, date, author, tags, etc., associated with the markdown content.
 => Gray-matter allows you to extract the front matter from a markdown file and access it as a JavaScript object. 
 => It provides a simple API to parse and access the front matter data.
+
+MDXRemote
+=>The MDXRemote component is used in Next.js with the next-mdx-remote package to render MDX (Markdown with JSX) content on the server-side.
+
+---------------Button component -------------
+
+import Link from "next/link"
+
+const Button = ({ href, type, rel, children }) => {
+  return (
+    <Link href={href} target="_blank" rel={`noopener noreferrer ${rel?(rel==="follow"?"":rel):"nofollow"}`} className={`btn mb-4 me-4 ${type === "outline"? "btn-outline-primary" : "btn-primary"}`}>
+      {children}
+    </Link>
+  )
+}
+
+export default Button
+
+---------------- shortcode --------------------
+import Button from "./Button";
+const shortcodes = {
+  Button,
+};
+
+export default shortcodes;
+
+------------ sortcode passed to mdx -----------
+<MDXRemote {...mdxContent} components={shortcodes} />
+
+=> When the MDX content is rendered using the MDXRemote component and the shortcodes object, the <Button> shortcode in md file will be replaced with the actual Button component, and the corresponding props will be passed to it. This enables you to include interactive elements or custom components within your MDX content and have them rendered correctly on the page.
+
+//////////////////////////////////////////////////////////////
+
+Markdown Language 
+# to indicate headings. 
+# Heading 1, ## Heading 2 ...
+=> Emphasis and Strong emphasis:
+  * or _ to wrap text for emphasis (italic) and ** or __ for strong emphasis (bold)
+=> Lists: Use -, *, or + at the beginning of a line to create unordered lists. 
+Use numbers followed by a dot to create ordered lists
+
+=> Links: Surround the link text in square brackets [ ] and the URL or link destination in parentheses ( ) 
+to create a link (e.g., [Link Text](https://example.com))
+=>Images: Similar to links, use an exclamation mark ! before the square brackets to create an image
+ (e.g., ![Alt Text](image.jpg)).
+=>Blockquotes: Use > at the beginning of a line to create blockquotes => ""
+
+ --- is used to indicate the start or end of a YAML front matter block. 
+ YAML front matter is metadata that can be included at the beginning of a Markdown file, typically used to provide information about the document such as title, author, date, tags, etc.
