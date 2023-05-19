@@ -7,27 +7,27 @@ import About from "@/layouts/About";
 import Default from "@/layouts/Default";
 import NotFound from "@/layouts/404";
 import PostSingle from "@/layouts/components/PostSingle";
-const { blog_folder } = config.settings;
+import axios from "axios";
+import { GET_ALL_AUTHORS, GET_ALL_POST, GET_ALL_SLUGS } from "@/query/strapiQuery";
 
 const RegularPages = ({ slug, data, posts, authors, postSlug }) => {
- const { title, meta_title, description, image, noindex, canonical, layout } = data.frontmatter;
-
  return (
-  <Base title={title} description={description ? description : content.slice(0, 120)} meta_title={meta_title} image={image} noindex={noindex} canonical={canonical}>
-   {postSlug.includes(slug) ? <PostSingle slug={slug} post={data} authors={authors} posts={posts} /> : layout === "404" ? <NotFound data={data} /> : layout === "about" ? <About data={data} /> : layout === "contact" ? <Contact data={data} /> : <Default data={data} />}
-  </Base>
+  <>
+   <Base>
+    <PostSingle slug={slug} post={data} authors={authors} posts={posts} />
+   </Base>
+  </>
  );
+ //  return <Base>{postSlug.includes(slug) ? <PostSingle slug={slug} post={data} authors={authors} posts={posts} /> : layout === "404" ? <NotFound data={data} /> : layout === "about" ? <About data={data} /> : layout === "contact" ? <Contact data={data} /> : <Default data={data} />}</Base>;
 };
 
 export default RegularPages;
 
 // for regular page routes
 export const getStaticPaths = async () => {
- const regularSlugs = getSinglePage("content");
- const postSlugs = getSinglePage(`content/${blog_folder}`);
- const allSlugs = [...regularSlugs, ...postSlugs];
+ const { data } = await axios.get(process.env.NEXT_STRAPI_API + GET_ALL_SLUGS);
 
- const paths = allSlugs.map((item) => ({
+ const paths = data.data.map((item) => ({
   params: {
    regular: item.slug,
   },
@@ -42,23 +42,18 @@ export const getStaticPaths = async () => {
 //for regular page data
 export const getStaticProps = async ({ params }) => {
  const { regular } = params;
- const allPages = await getRegularPage(regular);
-
- // get posts folder slug for filtering
- const getPostSlug = getSinglePage(`content/${blog_folder}`);
- const postSlug = getPostSlug.map((item) => item.slug);
- // aughor data
- const authors = getSinglePage("content/authors");
- // all single pages
- const posts = getSinglePage(`content/${blog_folder}`);
+ const postBySlug = await axios.get(process.env.NEXT_STRAPI_API + `api/posts?[populate][image][fields][0]=url&filters[slug][$eq]=${regular}`);
+ const posts = await axios.get(process.env.NEXT_STRAPI_API + GET_ALL_POST);
+ const postSlug = posts.data.data.map((item) => item.slug);
+ const authors = await axios.get(process.env.NEXT_STRAPI_API + GET_ALL_AUTHORS);
 
  return {
   props: {
    slug: regular,
-   data: allPages,
+   data: postBySlug.data.data,
    postSlug: postSlug,
-   authors: authors,
-   posts: posts,
+   authors: authors.data.data,
+   posts: posts.data.data,
   },
  };
 };

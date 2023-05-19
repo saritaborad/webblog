@@ -10,6 +10,7 @@ const parseMDX = async (content) => {
    remarkPlugins: [remarkGfm], // plugin that adds support for GitHub-flavored Markdown extensions, such as tables
   },
  };
+
  return await serialize(content, options); //responsible for converting MDX content into serialized data that can be consumed by Next.js.
 };
 

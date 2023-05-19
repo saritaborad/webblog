@@ -7,12 +7,21 @@ import shortcodes from "/layouts/shortcodes/all";
 import { MDXRemote } from "next-mdx-remote";
 import Image from "next/image";
 import Link from "next/link";
+import { serialize } from "next-mdx-remote/serialize";
+import parseMDX from "@/lib/utils/mdxParser";
+import { useEffect, useState } from "react";
 
 const PostSingle = ({ post, posts, authors, slug }) => {
- const { frontmatter, content, mdxContent } = post;
- let { description, title, date, image, categories, tags } = frontmatter;
+ let { content, description, title, createdAt, image } = post[0];
+ const [mdxContent, setMaxContent] = useState();
+
+ useEffect(async () => {
+  const html = await serialize(content);
+  setMaxContent(html);
+ }, []);
+
  description = description ? description : content.slice(0, 120);
- const similarPosts = similerItems(post, posts, slug);
+ //  const similarPosts = similerItems(post[0], posts, slug);
 
  return (
   <>
@@ -20,8 +29,9 @@ const PostSingle = ({ post, posts, authors, slug }) => {
     <div className="container">
      <article className="text-center">
       {markdownify(title, "h1", "h2")}
+
       <ul className="mb-8 mt-4 flex flex-wrap items-center justify-center space-x-3 text-text">
-       <li>
+       {/* <li>
         {authors
          .filter((author) => frontmatter.authors.map((author) => slugify(author)).includes(slugify(author.frontmatter.title)))
          .map((author, i) => (
@@ -30,9 +40,9 @@ const PostSingle = ({ post, posts, authors, slug }) => {
            <span>{author.frontmatter.title}</span>
           </Link>
          ))}
-       </li>
-       <li>{dateFormat(date)}</li>
-       <li>
+       </li> */}
+       <li>{dateFormat(createdAt)}</li>
+       {/* <li>
         <ul>
          {categories.map((category, i) => (
           <li className="inline-block" key={`category-${i}`}>
@@ -42,13 +52,15 @@ const PostSingle = ({ post, posts, authors, slug }) => {
           </li>
          ))}
         </ul>
-       </li>
+       </li> */}
       </ul>
-      {image && <Image src={image} height="500" width="1000" alt={title} className="rounded-lg" />}
-      <div className="content mb-16 text-left">
-       <MDXRemote {...mdxContent} components={shortcodes} />
-      </div>
-      <div className="flex flex-wrap items-center justify-between">
+      {image && <Image src={"http://127.0.0.1:1337" + image.url} height="500" width="1000" alt={title} className="rounded-lg" />}
+      {mdxContent && (
+       <div className="content mb-16 text-left">
+        <MDXRemote {...mdxContent} components={shortcodes} />
+       </div>
+      )}
+      {/* <div className="flex flex-wrap items-center justify-between">
        <ul className="mb-4 mr-4 space-x-3">
         {tags.map((tag, i) => (
          <li className="inline-block" key={`tag-${i}`}>
@@ -59,16 +71,16 @@ const PostSingle = ({ post, posts, authors, slug }) => {
         ))}
        </ul>
        <Share className="social-share mb-4" title={title} description={description} slug={slug} />
-      </div>
+      </div> */}
      </article>
     </div>
    </section>
-   <section className="section">
+   {/* <section className="section">
     <div className="container">
      <h2 className="mb-8 text-center">Similar Posts</h2>
      <SimilarPosts posts={similarPosts.slice(0, 3)} />
     </div>
-   </section>
+   </section> */}
   </>
  );
 };
