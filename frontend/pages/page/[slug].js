@@ -1,9 +1,9 @@
 import Pagination from "/layouts/components/Pagination";
 import config from "/config/config.json";
 import Base from "/layouts/components/Baseof";
-import { getSinglePage } from "/lib/contentParser";
 import Posts from "/layouts/components/Posts";
-const { blog_folder } = config.settings;
+import axios from "axios";
+import { GET_ALL_POST } from "@/query/strapiQuery";
 
 // blog pagination
 const BlogPagination = ({ posts, authors, currentPage, pagination }) => {
@@ -16,7 +16,7 @@ const BlogPagination = ({ posts, authors, currentPage, pagination }) => {
   <Base>
    <section className="section">
     <div className="container">
-     <Posts className="mb-16" posts={currentPosts} authors={authors} />
+     <Posts className="mb-16" posts={currentPosts} />
      <Pagination totalPages={totalPages} currentPage={currentPage} />
     </div>
    </section>
@@ -27,9 +27,10 @@ const BlogPagination = ({ posts, authors, currentPage, pagination }) => {
 export default BlogPagination;
 
 // get blog pagination slug
-export const getStaticPaths = () => {
- const getAllSlug = getSinglePage(`content/${blog_folder}`);
- const allSlug = getAllSlug.map((item) => item.slug);
+export const getStaticPaths = async () => {
+ const { data } = await axios.get(process.env.NEXT_STRAPI_API + GET_ALL_POST);
+
+ const allSlug = data.data.map((item) => item.slug); // get all slug
  const { pagination } = config.settings;
  const totalPages = Math.ceil(allSlug.length / pagination);
  let paths = [];
@@ -52,14 +53,12 @@ export const getStaticPaths = () => {
 export const getStaticProps = async ({ params }) => {
  const currentPage = parseInt((params && params.slug) || 1);
  const { pagination } = config.settings;
- const posts = getSinglePage(`content/${blog_folder}`);
- const authors = getSinglePage("content/authors");
+ const posts = await axios.get(process.env.NEXT_STRAPI_API + GET_ALL_POST);
 
  return {
   props: {
    pagination: pagination,
-   posts: posts,
-   authors: authors,
+   posts: posts.data.data,
    currentPage: currentPage,
   },
  };

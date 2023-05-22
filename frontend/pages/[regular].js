@@ -8,22 +8,14 @@ import Default from "@/layouts/Default";
 import NotFound from "@/layouts/404";
 import PostSingle from "@/layouts/components/PostSingle";
 import axios from "axios";
-import { GET_ALL_AUTHORS, GET_ALL_POST, GET_ALL_SLUGS } from "@/query/strapiQuery";
+import { GET_ALL_POST, GET_ALL_SLUGS } from "@/query/strapiQuery";
 
-const RegularPages = ({ slug, data, posts, authors, postSlug }) => {
- return (
-  <>
-   <Base>
-    <PostSingle slug={slug} post={data} authors={authors} posts={posts} />
-   </Base>
-  </>
- );
- //  return <Base>{postSlug.includes(slug) ? <PostSingle slug={slug} post={data} authors={authors} posts={posts} /> : layout === "404" ? <NotFound data={data} /> : layout === "about" ? <About data={data} /> : layout === "contact" ? <Contact data={data} /> : <Default data={data} />}</Base>;
+const RegularPages = ({ slug, data, posts, postSlug }) => {
+ return <Base>{postSlug.includes(slug) ? <PostSingle slug={slug} post={data} posts={posts} /> : slug === "404" ? <NotFound data={data} /> : slug === "about" ? <About data={data} /> : slug === "contact" ? <Contact data={data} /> : <Default data={data} />}</Base>;
 };
 
 export default RegularPages;
 
-// for regular page routes
 export const getStaticPaths = async () => {
  const { data } = await axios.get(process.env.NEXT_STRAPI_API + GET_ALL_SLUGS);
 
@@ -39,20 +31,17 @@ export const getStaticPaths = async () => {
  };
 };
 
-//for regular page data
 export const getStaticProps = async ({ params }) => {
  const { regular } = params;
- const postBySlug = await axios.get(process.env.NEXT_STRAPI_API + `api/posts?[populate][image][fields][0]=url&filters[slug][$eq]=${regular}`);
+ const postBySlug = await axios.get(process.env.NEXT_STRAPI_API + `api/posts?[populate][image][fields][0]=url&filters[slug][$eq]=${regular}&populate[categories][fields][0]=name&populate[author][populate][image][fields][0]=url&populate[tags][fields][0]=name`);
  const posts = await axios.get(process.env.NEXT_STRAPI_API + GET_ALL_POST);
- const postSlug = posts.data.data.map((item) => item.slug);
- const authors = await axios.get(process.env.NEXT_STRAPI_API + GET_ALL_AUTHORS);
+ const postSlug = await posts.data.data.map((item) => item.slug);
 
  return {
   props: {
    slug: regular,
    data: postBySlug.data.data,
    postSlug: postSlug,
-   authors: authors.data.data,
    posts: posts.data.data,
   },
  };

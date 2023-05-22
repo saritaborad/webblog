@@ -2,11 +2,13 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import menu from "../config/menu.json";
 import { IoSearch } from "react-icons/io5";
+import SearchModal from "./components/SearchModal";
 
 const Header = () => {
  const { main } = menu;
 
  const [navFixed, setNavFixed] = useState(false);
+ const [searchModal, setSearchModal] = useState(false);
 
  useEffect(() => {
   const changeNavbarBackground = () => {
@@ -26,7 +28,7 @@ const Header = () => {
      <div className="order-0">{/* <Logo /> */}</div>
 
      <input id="nav-toggle" type="checkbox" className="hidden" />
-     {/* <label id="show-button" htmlFor="nav-toggle" className="order-2 flex cursor-pointer items-center md:order-1 md:hidden">
+     <label id="show-button" htmlFor="nav-toggle" className="order-2 flex cursor-pointer items-center md:order-1 md:hidden">
       <svg className="h-6 fill-current" viewBox="0 0 20 20">
        <title>Menu Open</title>
        <path d="M0 3h20v2H0V3z m0 6h20v2H0V9z m0 6h20v2H0V0z" />
@@ -37,7 +39,7 @@ const Header = () => {
        <title>Menu Close</title>
        <polygon points="11 9 22 9 22 11 11 11 11 22 9 22 9 11 -2 11 -2 9 9 9 9 -2 11 -2" transform="rotate(45 10 10)" />
       </svg>
-     </label> */}
+     </label>
 
      <ul id="nav-menu" className="navbar-nav order-3 hidden w-full md:order-1 md:flex md:w-auto md:space-x-2">
       {main.map((menu, i) => (
@@ -80,7 +82,7 @@ const Header = () => {
        <IoSearch />
       </div>
      </div>
-     {/* <SearchModal searchModal={searchModal} setSearchModal={setSearchModal} /> */}
+     <SearchModal searchModal={searchModal} setSearchModal={setSearchModal} />
     </nav>
    </header>
   </>

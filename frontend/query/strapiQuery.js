@@ -22,14 +22,15 @@ const GET_ALL_AUTHORS = `api/authors?[populate][image][fields][0]=url`;
 
 // const GET_AUTHOR = `api/authors/${params.id}?[populate][image][fields][0]=url`;
 
-// const GETALLTAGS = `api/tags?[fields][0]=name`;
+const GETALLTAGS = `api/tags?[fields][0]=name`;
 
-// const GET_ALL_CATEGORY = `api/categories?[fields][0]=name`;
+const GET_ALL_CATEGORY = `api/categories?[fields][0]=name`;
 
 export {
  GET_ALL_POST,
- // GET_SINGLE_POST, GET_POSTBY_SLUG, GET_POSTBY_CATEGORY, GET_POSTBY_TAG, GET_ALL_SLUGS, GET_AUTHORBY_NAME, GET_POST_AUTHOR, GET_ALL_AUTHORS, GET_ALLPOSTBY_TAG, GET_AUTHOR_BY_SLUG, GET_AUTHOR, GETALLTAGS,
- // GET_ALL_CATEGORY
+ // GET_SINGLE_POST, GET_POSTBY_SLUG, GET_POSTBY_CATEGORY, GET_POSTBY_TAG, GET_ALL_SLUGS, GET_AUTHORBY_NAME, GET_POST_AUTHOR, GET_ALL_AUTHORS, GET_ALLPOSTBY_TAG, GET_AUTHOR_BY_SLUG, GET_AUTHOR,
+ GETALLTAGS,
+ GET_ALL_CATEGORY,
  GET_ALL_SLUGS,
  GET_ALL_AUTHORS,
 };

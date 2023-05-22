@@ -1,5 +1,6 @@
 import { slug } from "github-slugger";
 import { marked } from "marked";
+import { serialize } from "next-mdx-remote/serialize";
 
 // slugify
 export const slugify = (content) => {
@@ -67,4 +68,13 @@ const htmlEntityDecoder = (htmlWithEntities) => {
   return entityList[entity];
  });
  return htmlWithoutEntities;
+};
+
+export const parseMDX = async (content) => {
+ const html = await serialize(content, {
+  mdxOptions: {
+   development: process.env.NEXT_APP_PRODUCTION === 1 ? false : true,
+  },
+ });
+ return html;
 };
