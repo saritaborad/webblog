@@ -2,7 +2,7 @@ import { markdownify } from "@/lib/utils/textConverter";
 
 const NotFound = ({ data }) => {
  const { frontmatter, content } = data;
- 
+
  return (
   <section className="section">
    <div className="conatiner">

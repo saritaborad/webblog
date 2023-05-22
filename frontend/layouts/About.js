@@ -1,27 +1,39 @@
-import { markdownify } from "@/lib/utils/textConverter";
-import React from "react";
-import Social from "./components/Social";
+import Social from "/layouts/components/Social";
+import { markdownify } from "/lib/utils/textConverter";
+import shortcodes from "/layouts/shortcodes/all";
 import { MDXRemote } from "next-mdx-remote";
-import shortcodes from "../layouts/shortcodes/all";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { parseMDX } from "/lib/utils/textConverter";
+import dynamic from "next/dynamic";
+
 const About = ({ data }) => {
- const { frontmatter, mdxContent } = data;
- const { title, image, social } = frontmatter;
+ const { content, title, social, image } = data[0];
+ const [mdxContent, setMaxContent] = useState();
+
+ useEffect(() => {
+  async function fetchMdx() {
+   setMaxContent(await parseMDX(content));
+  }
+  fetchMdx();
+ }, []);
 
  return (
   <section className="section">
    <div className="container text-center">
     {image && (
      <div className="img-cover mb-8">
-      <Image src={image} width={920} height={515} alt={title} className="rounded-lg" />
+      <Image src={"http://127.0.0.1:1337" + image.url} width={920} height={515} alt={title} className="rounded-lg" />
      </div>
     )}
     {markdownify(title, "h1", "h2")}
     <Social source={social} className="social-icons-simple my-8" />
 
-    <div className="content">
-     <MDXRemote {...mdxContent} components={shortcodes} />
-    </div>
+    {mdxContent && (
+     <div className="content">
+      <MDXRemote {...mdxContent} components={shortcodes} />
+     </div>
+    )}
    </div>
   </section>
  );

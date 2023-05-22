@@ -29,14 +29,10 @@
 
 // export const getRegularPage = async (slug) => {
 //  let frontmatter, content;
-//  const publishedPages = getSinglePage("content/posts");
+
 //  const regularPage = getSinglePage("content");
 
-//  if (publishedPages.map((slug) => slug.slug).includes(slug)) {
-//   const pageData = publishedPages.filter((data) => data.slug === slug);
-//   content = pageData[0].content;
-//   frontmatter = pageData[0].frontmatter;
-//  } else if (regularPage.map((el) => el.slug).includes(slug)) {
+//  if (regularPage.map((el) => el.slug).includes(slug)) {
 //   const regulerData = regularPage.filter((data) => data.slug === slug);
 //   content = regulerData[0].content;
 //   frontmatter = regulerData[0].frontmatter;
