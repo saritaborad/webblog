@@ -5,15 +5,14 @@ import { MDXRemote } from "next-mdx-remote";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { parseMDX } from "/lib/utils/textConverter";
-import dynamic from "next/dynamic";
 
 const About = ({ data }) => {
  const { content, title, social, image } = data[0];
- const [mdxContent, setMaxContent] = useState();
+ const [mdxContent, setMdxContent] = useState();
 
  useEffect(() => {
   async function fetchMdx() {
-   setMaxContent(await parseMDX(content));
+   setMdxContent(await parseMDX(content));
   }
   fetchMdx();
  }, []);

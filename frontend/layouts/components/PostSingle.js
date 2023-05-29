@@ -14,11 +14,11 @@ import Link from "next/link";
 const PostSingle = ({ post, posts, slug }) => {
  let { content, description, title, createdAt, image, author, categories, tags } = post[0];
  let Author = Array.isArray(author) ? author : Array(author);
- const [mdxContent, setMaxContent] = useState();
+ const [mdxContent, setMdxContent] = useState();
 
  useEffect(() => {
   async function fetchMdx() {
-   setMaxContent(await parseMDX(content));
+   setMdxContent(await parseMDX(content));
   }
   fetchMdx();
  }, []);

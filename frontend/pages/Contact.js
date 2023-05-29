@@ -7,30 +7,30 @@ const Contact = () => {
     {markdownify("Contact", "h1", "h2 mb-8 text-center")}
     <form className="contact-form" method="POST">
      <div className="mb-6">
-      <label htmlFor="name" className="mb-2 block">
+      <label className="mb-2 block" htmlFor="name">
        Name
       </label>
       <input className="form-input w-full" name="name" type="text" required />
      </div>
      <div className="mb-6">
-      <label htmlFor="" className="mb-2 block">
+      <label className="mb-2 block" htmlFor="email">
        Email
       </label>
-      <input type="email" className="form-input w-full" name="email" required />
+      <input className="form-input w-full" name="email" type="email" required />
      </div>
      <div className="mb-6">
-      <label htmlFor="subject" className="mb-2 block">
+      <label className="mb-2 block" htmlFor="subject">
        Subject
       </label>
-      <input type="text" className="form-input w-full" name="subject" required />
+      <input className="form-input w-full" name="subject" type="text" required />
      </div>
      <div className="mb-6">
-      <label htmlFor="message" className="mb-2 block">
+      <label className="mb-2 block" htmlFor="message">
        Message
       </label>
-      <textarea className="form-textarea w-full" rows="7"></textarea>
+      <textarea className="form-textarea w-full" rows="7" />
      </div>
-     <button className="btn btn-outline-primary">Submit</button>
+     <button className="btn btn-outline-primary">Submit Now</button>
     </form>
    </div>
   </section>

@@ -1,18 +1,15 @@
-import Base from "@/layouts/components/Baseof";
-import { getRegularPage, getSinglePage } from "@/lib/contentParser";
-import config from "../config/config.json";
+import Base from "/layouts/components/Baseof";
 import React from "react";
-import Contact from "@/layouts/Contact";
+import Contact from "/layouts/Contact";
 import About from "/layouts/About";
-import Default from "@/layouts/Default";
-import NotFound from "@/layouts/404";
-import PostSingle from "@/layouts/components/PostSingle";
+import NotFound from "/layouts/404";
+import PostSingle from "/layouts/components/PostSingle";
 import axios from "axios";
 import { GET_ALL_POST, GET_ALL_SLUGS } from "@/query/strapiQuery";
+import Default from "@/layouts/Default";
 
-const RegularPages = ({ slug, data, posts, postSlug, aboutData }) => {
- console.log(aboutData);
- return <Base>{postSlug.includes(slug) ? <PostSingle slug={slug} post={data} posts={posts} /> : slug === "about" ? <About data={aboutData} /> : <NotFound data={data} />}</Base>;
+const RegularPages = ({ slug, data, posts, postSlug, aboutData, privacyData }) => {
+ return <Base>{postSlug.includes(slug) ? <PostSingle slug={slug} post={data} posts={posts} /> : slug === "404" ? <NotFound /> : slug === "about" ? <About data={aboutData} /> : slug === "contact" ? <Contact /> : slug === "privacy-policy" ? <Default data={privacyData} /> : <Default data={privacyData} />}</Base>;
 };
 
 export default RegularPages;
@@ -26,6 +23,8 @@ export const getStaticPaths = async () => {
   },
  }));
  paths.push({ params: { regular: "about" } });
+ paths.push({ params: { regular: "contact" } });
+ paths.push({ params: { regular: "privacy-policy" } });
 
  return {
   paths,
@@ -39,6 +38,7 @@ export const getStaticProps = async ({ params }) => {
  const posts = await axios.get(process.env.NEXT_STRAPI_API + GET_ALL_POST);
  const postSlug = await posts.data.data.map((item) => item.slug);
  const aboutData = await axios.get(process.env.NEXT_STRAPI_API + "api/abouts?populate[image][fields][0]=url");
+ const privacy = await axios.get(process.env.NEXT_STRAPI_API + "api/privacypolicies");
 
  return {
   props: {
@@ -47,6 +47,7 @@ export const getStaticProps = async ({ params }) => {
    postSlug: postSlug,
    posts: posts.data.data,
    aboutData: aboutData.data.data,
+   privacyData: privacy.data.data,
   },
  };
 };

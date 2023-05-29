@@ -9,11 +9,11 @@ import { useEffect, useState } from "react";
 
 const AuthorSingle = ({ author }) => {
  const { description, social, name, about, image } = author[0];
- const [mdxContent, setMaxContent] = useState();
+ const [mdxContent, setMdxContent] = useState();
 
  useEffect(() => {
   async function fetchMdx() {
-   setMaxContent(await parseMDX(about));
+   setMdxContent(await parseMDX(about));
   }
   fetchMdx();
  }, []);

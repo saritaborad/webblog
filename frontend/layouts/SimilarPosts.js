@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 
 const SimilarPosts = ({ posts }) => {
- console.log(posts);
  return (
   <div className="row justify-center">
    {posts.map((post, i) => (

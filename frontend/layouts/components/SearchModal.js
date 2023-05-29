@@ -10,7 +10,7 @@ const SearchModal = ({ searchModal, setSearchModal }) => {
   if (searchModal) {
    document.getElementById("searchModal").focus();
    document.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && input) {
      router.push({ pathname: "/search", query: { key: input } });
      setSearchModal(false);
     }
